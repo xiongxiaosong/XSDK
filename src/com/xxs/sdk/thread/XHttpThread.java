@@ -127,6 +127,7 @@ public class XHttpThread extends Thread {
 				}
 				switch (msg.what) {
 				case 0:// 无网络
+					if (httpCallBack != null)
 					httpCallBack
 							.failExecuteHttp(
 									threadId,
@@ -137,6 +138,7 @@ public class XHttpThread extends Thread {
 															R.string.nonetwork_please_checknet)));
 					break;
 				case 1:// 不支持编码
+					if (httpCallBack != null)
 					httpCallBack
 							.failExecuteHttp(
 									threadId,
@@ -147,6 +149,7 @@ public class XHttpThread extends Thread {
 															R.string.notsurport_encodtransform)));
 					break;
 				case 2:// 请求地址错误
+					if (httpCallBack != null)
 					httpCallBack.failExecuteHttp(
 							threadId,
 							new Exception(AppContext.mMainContext
@@ -154,6 +157,7 @@ public class XHttpThread extends Thread {
 											R.string.net_adress_error)));
 					break;
 				case 3:// 数据请求失败
+					if (httpCallBack != null)
 					httpCallBack
 							.failExecuteHttp(
 									threadId,
@@ -165,13 +169,15 @@ public class XHttpThread extends Thread {
 					break;
 				case 4:// 请求成功
 					String result = (String) msg.obj;
-					LogUtil.e(LOG_TAG + "成功:", result);
+					if (httpCallBack != null)
 					httpCallBack.succedExecuteHttp(threadId, result);
 					break;
 				case 5:// 开始请求网络
+					if (httpCallBack != null)
 					httpCallBack.preExecuteHttp(threadId);
 					break;
 				case 6:// 请求超时
+					if (httpCallBack != null)
 					httpCallBack.failExecuteHttp(
 							threadId,
 							new Exception(AppContext.mMainContext
@@ -179,6 +185,7 @@ public class XHttpThread extends Thread {
 											R.string.netsocket_timeout)));
 					break;
 				case 7:// 请求超时
+					if (httpCallBack != null)
 					httpCallBack.failExecuteHttp(
 							threadId,
 							new Exception(AppContext.mMainContext
@@ -202,6 +209,7 @@ public class XHttpThread extends Thread {
 	public void disConnectHttpMethod() throws Exception {
 		if (helper != null)
 			helper.disConnectHttp();
+		iscancled = true;
 	}
 
 	/** 取消Http连接的方法 */
