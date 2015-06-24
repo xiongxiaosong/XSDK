@@ -86,7 +86,6 @@ public class XGuestureLock extends ViewGroup {
 		setCustomAttributes(attrs);// 调用初始化
 		initMethod();// 调用初始化的方法
 		addChildMethod();// 调用添加子View的方法
-		arrayGuestInfo = new ArrayList<XGuestLockInfo>();
 		arrayChoosed = new ArrayList<XGuestLockInfo>();
 	}
 
@@ -130,6 +129,7 @@ public class XGuestureLock extends ViewGroup {
 		int measureWidth = MeasureSpec.getSize(widthMeasureSpec);
 		int measureHeigth = MeasureSpec.getSize(heightMeasureSpec);
 		setMeasuredDimension(measureWidth, measureHeigth);
+		arrayGuestInfo = new ArrayList<XGuestLockInfo>();
 		for (int i = 0; i < getChildCount(); i++) {
 			View v = getChildAt(i);
 			int widthSpec = 0;
@@ -527,7 +527,7 @@ public class XGuestureLock extends ViewGroup {
 	}
 
 	/** 清空绘制状态的方法 */
-	private void clearMethod() {
+	public void clearMethod() {
 		isError = false;
 		arrayChoosed.clear();
 		for (XGuestLockInfo info : arrayGuestInfo) {
