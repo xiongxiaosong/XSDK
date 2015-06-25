@@ -275,6 +275,7 @@ public class XGuestureLock extends ViewGroup {
 		}
 		return false;
 	}
+
 	/**
 	 * 获取中间点的方法
 	 * 
@@ -441,10 +442,11 @@ public class XGuestureLock extends ViewGroup {
 		} else {
 			if (isTouchup) {
 				if (arrayChoosed.size() < 4) {
-					if(arrayChoosed.size()>0){
-						if (xCallback != null)
+					if (arrayChoosed.size() > 0) {
+						if (xCallback != null) {
 							xCallback
-							.onXGuestureLockCallback(XGuestureLockCallback.POINT_LENGTH_SHORT);
+									.onXGuestureLockCallback(XGuestureLockCallback.POINT_LENGTH_SHORT);
+						}
 					}
 					clearMethod();
 				} else {
@@ -455,9 +457,10 @@ public class XGuestureLock extends ViewGroup {
 							isVerify = true;
 						}
 						clearMethod();
-						if (xCallback != null)
+						if (xCallback != null) {
 							xCallback
 									.onXGuestureLockCallback(XGuestureLockCallback.FIRST_LINE_OVER);
+						}
 					} else {
 						StringBuilder verifychoosed = new StringBuilder();
 						for (XGuestLockInfo xinfo : arrayChoosed) {
@@ -465,18 +468,20 @@ public class XGuestureLock extends ViewGroup {
 						}
 						if (haschoosed.toString().equals(
 								verifychoosed.toString())) {
-							if (xCallback != null)
+							if (xCallback != null) {
+								clearMethod();
 								xCallback
 										.onXGuestureLockCallback(XGuestureLockCallback.TWICE_LINE_SAME);
+							}
 						} else {
-							if (xCallback != null)
+							if (xCallback != null) {
 								xCallback
 										.onXGuestureLockCallback(XGuestureLockCallback.TWICE_NOT_SAME);
-							isError = true;
-							postInvalidate();
+								isError = true;
+								postInvalidate();
+							}
 						}
 					}
-					drawaLineMethod(canvas, null, false);
 				}
 			} else {
 				drawaLineMethod(canvas, new float[] { nowX, nowY }, false);
