@@ -2,11 +2,18 @@ package com.xxs.sdk.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -355,5 +362,28 @@ public class ProveUtil {
 	/** 是否是闰年 */
 	private static boolean isLeapYear(int year) {
 		return ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0);
+	}
+
+	/**
+	 * 判断是否是在桌面
+	 * 
+	 * @return 在桌面true 不在桌面false
+	 */
+	public static boolean isHome() {
+		ActivityManager mActivityManager = (ActivityManager) AppContext.mMainContext
+				.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningTaskInfo> rti = mActivityManager.getRunningTasks(1);
+		List<String> homeList = new ArrayList<String>();
+		PackageManager packageManager = AppContext.mMainContext
+				.getPackageManager();
+		// 属性
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_HOME);
+		List<ResolveInfo> resolveInfo = packageManager.queryIntentActivities(
+				intent, PackageManager.MATCH_DEFAULT_ONLY);
+		for (ResolveInfo ri : resolveInfo) {
+			homeList.add(ri.activityInfo.packageName);
+		}
+		return homeList.contains(rti.get(0).topActivity.getPackageName());
 	}
 }
