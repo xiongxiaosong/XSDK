@@ -369,6 +369,7 @@ public class ProveUtil {
 	 * 
 	 * @return 在桌面true 不在桌面false
 	 */
+	@SuppressWarnings("deprecation")
 	public static boolean isHome() {
 		ActivityManager mActivityManager = (ActivityManager) AppContext.mMainContext
 				.getSystemService(Context.ACTIVITY_SERVICE);
