@@ -387,4 +387,12 @@ public class ProveUtil {
 		}
 		return homeList.contains(rti.get(0).topActivity.getPackageName());
 	}
+	/**得到运行在最上层App的包名*/
+	@SuppressWarnings("deprecation")
+	public static String getTopAppName() {
+		ActivityManager mActivityManager = (ActivityManager) AppContext.mMainContext
+				.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningTaskInfo> rti = mActivityManager.getRunningTasks(1);
+		return rti.get(0).topActivity.getPackageName();
+	}
 }

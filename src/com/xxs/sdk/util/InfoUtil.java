@@ -73,7 +73,30 @@ public class InfoUtil {
 		}
 		return statusBarHeight;
 	}
+	/**
+	 * 获取安装应用包名
+	 * 
+	 * @param mContext
+	 * @param packageName
+	 * 
+	 */
+	public static final String getPackageName() {
+		String version = "";
+		PackageManager pm = AppContext.mMainContext.getPackageManager();
+		PackageInfo info;
+		try {
+			info = pm.getPackageInfo(AppContext.mMainContext.getPackageName(),
+					0);
+			if (info != null) {
+				version = String.valueOf(info.packageName);
+			}
+		} catch (Exception e) {
+			LogUtil.e(LOG_TAG, e);
+			e.printStackTrace();
+		}
 
+		return version;
+	}
 	/**
 	 * 获取安装应用版本名
 	 * 
