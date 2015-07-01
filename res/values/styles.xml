@@ -2,13 +2,13 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
@@ -30,19 +30,40 @@
     <style name="NPWidget.Holo.NumberPicker" parent="NPWidget.NumberPicker">
         <item name="solidColor">@android:color/transparent</item>
         <!-- <item name="selectionDivider">@drawable/np_numberpicker_selection_divider</item> -->
-       <item name="selectionDivider">@drawable/shap_numberpicker_selecterline_gray</item> 
+        <item name="selectionDivider">@drawable/shap_numberpicker_selecterline_gray</item>
         <item name="selectionDividerHeight">2dip</item>
         <item name="internalLayout">@layout/number_picker_with_selector_wheel</item>
         <item name="internalMinWidth">64dip</item>
         <item name="internalMaxHeight">180dip</item>
-       <!--  <item name="virtualButtonPressedDrawable">@drawable/item_background_holo_dark</item> -->
+        <!-- <item name="virtualButtonPressedDrawable">@drawable/item_background_holo_dark</item> -->
         <item name="virtualButtonPressedDrawable">@null</item>
     </style>
 
     <style name="NPWidget.Holo.Light.NumberPicker" parent="NPWidget.Holo.NumberPicker">
-
         <item name="virtualButtonPressedDrawable">@null</item>
-       <!--  <item name="virtualButtonPressedDrawable">@drawable/item_background_holo_light</item> -->
+        <!-- <item name="virtualButtonPressedDrawable">@drawable/item_background_holo_light</item> -->
+    </style>
+
+    <style name="GridPasswordView" />
+
+    <style name="GridPasswordView.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="GridPasswordView.EditText" parent="GridPasswordView.TextView">
+        <item name="android:cursorVisible">false</item>
+    </style>
+
+    <style name="GridPasswordView.Divider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_marginBottom">1dp</item>
     </style>
 
 </resources>
