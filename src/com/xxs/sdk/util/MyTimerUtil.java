@@ -1,6 +1,5 @@
 package com.xxs.sdk.util;
 
-import android.os.CountDownTimer;
 
 import com.xxs.sdk.myinterface.MyTimerInterCallback;
 
