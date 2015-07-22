@@ -15,11 +15,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.xxs.sdk.R;
 import com.xxs.sdk.util.DateUtil;
 import com.xxs.sdk.util.FileUtil;
 import com.xxs.sdk.util.LogUtil;
@@ -90,18 +87,18 @@ public class CrashHandler implements UncaughtExceptionHandler {
 			return false;
 		}
 		// 使用Toast来显示异常信息
-		new Thread() {
-			@Override
-			public void run() {
-				Looper.prepare();
-				Toast.makeText(
-						mContext,
-						mContext.getResources().getString(
-								R.string.systemiserror_wiilexite),
-						Toast.LENGTH_LONG).show();
-				Looper.loop();
-			}
-		}.start();
+//		new Thread() {
+//			@Override
+//			public void run() {
+//				Looper.prepare();
+//				Toast.makeText(
+//						mContext,
+//						mContext.getResources().getString(
+//								R.string.systemiserror_wiilexite),
+//						Toast.LENGTH_LONG).show();
+//				Looper.loop();
+//			}
+//		}.start();
 		// 收集设备参数信息
 		collectDeviceInfo(mContext);
 		// 保存日志文件

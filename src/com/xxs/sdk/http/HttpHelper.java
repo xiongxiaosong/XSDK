@@ -28,7 +28,10 @@ import com.xxs.sdk.util.LogUtil;
  */
 public class HttpHelper {
 	private static String LOG_TAG = HttpHelper.class.getName();
-	private static final int TIMEOUT = 5000;
+	/**连接超时*/
+	private static final int TIMEOUT_CONNECT = 5000;
+	/**读取数据超时*/
+	private static final int TIMEOUT_READ = 10000;
 	private HttpURLConnection httpUrlConn;
 	 private final int NET_BUFFER_SIZE = 512;
 	/**
@@ -89,7 +92,8 @@ public class HttpHelper {
 			httpCon.setRequestMethod("GET");
 			httpCon.setDoOutput(false);
 			httpCon.setDoInput(true);
-			httpCon.setConnectTimeout(TIMEOUT);
+			httpCon.setConnectTimeout(TIMEOUT_CONNECT);
+			httpCon.setReadTimeout(TIMEOUT_READ);
 			httpCon.setRequestProperty("Content-Type",
 					"application/x-www-form-urlencoded;charset=utf-8");  
 		} else {
@@ -100,7 +104,8 @@ public class HttpHelper {
 			httpCon.setDoOutput(true);
 			httpCon.setDoInput(true);
 			httpCon.setUseCaches(false);// Post 请求不能使用缓存
-			httpCon.setConnectTimeout(TIMEOUT);
+			httpCon.setConnectTimeout(TIMEOUT_CONNECT);
+			httpCon.setReadTimeout(TIMEOUT_READ);
 			httpCon.setRequestProperty("Content-Type",
 					"application/x-www-form-urlencoded;charset=utf-8");
 			OutputStream outs = httpCon.getOutputStream();
