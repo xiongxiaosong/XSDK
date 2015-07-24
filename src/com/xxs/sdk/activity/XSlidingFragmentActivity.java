@@ -137,7 +137,6 @@ public class XSlidingFragmentActivity extends FragmentActivity implements
 	 * 
 	 * @see android.app.Activity#setContentView(int)
 	 */
-	@Override
 	public void setContentView(int id) {
 		setContentView(getLayoutInflater().inflate(id, null));
 	}
@@ -147,7 +146,6 @@ public class XSlidingFragmentActivity extends FragmentActivity implements
 	 * 
 	 * @see android.app.Activity#setContentView(android.view.View)
 	 */
-	@Override
 	public void setContentView(View v) {
 		setContentView(v, new LayoutParams(LayoutParams.MATCH_PARENT,
 				LayoutParams.MATCH_PARENT));
