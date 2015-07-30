@@ -171,8 +171,14 @@ public class GridPasswordView extends LinearLayout implements PasswordView {
 	 */
 	public void setAllowOnclick(boolean allowonclick) {
 		if (allowonclick) {
+			inputView.setFocusable(true);
+			inputView.setFocusableInTouchMode(true);
+			inputView.requestFocus();
 			setOnClickListener(onClickListener);
 		} else {
+			inputView.clearFocus();
+			inputView.setFocusable(false);
+			inputView.setFocusableInTouchMode(false);
 			setOnClickListener(null);
 		}
 	}

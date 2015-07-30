@@ -1,0 +1,5 @@
+<resources>
+<!-- 侧边栏打开后顶部留下的宽度 -->
+    <dimen name="slidingmenu_above_offset">55dp</dimen>
+
+</resources>

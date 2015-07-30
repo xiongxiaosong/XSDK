@@ -28,19 +28,9 @@ public class UiUtil {
     /*沉浸颜色*/
     private TextView textView;
     /**
-     * 单利模式获取唯一对象
-     * @return 得到的唯一对象
-     */
-    public static UiUtil getMethod(){
-    	if(uiUtil == null){
-    		uiUtil = new UiUtil();
-    	}
-    	return uiUtil;
-    }
-    /**
      * 设置错误提示的方法
      */
-    public void setErrorMethod(TextView view, String error) {
+    public static void setErrorMethod(TextView view, String error) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             view.setError(Html.fromHtml("<font color=#FFFFFF>" + error
                     + "</font>"));
@@ -70,6 +60,9 @@ public class UiUtil {
 			LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, getStatusBarHeight());
 			//textview是实际添加的状态栏view，颜色可以设置成纯色，也可以加上shape，添加gradient属性设置渐变色
+			if(textView != null){
+				removeStatus();
+			}
 			textView = new TextView(activity);
 			textView.setBackgroundResource(colorResource);
 			textView.setLayoutParams(lParams);
@@ -105,7 +98,11 @@ public class UiUtil {
 	public void changeStatusBarColor(float alpha) {
  		//textview是slidingmenu关闭时显示的颜色
  		//textview2是slidingmenu打开时显示的颜色
- 		textView.setAlpha(1 - alpha);
- 		
+		if(textView!= null){
+			textView.setAlpha(1 - alpha);
+		}
  	}
+	private void removeStatus(){
+		view.removeView(textView);
+	}
 }
