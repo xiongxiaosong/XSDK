@@ -190,7 +190,6 @@ public class XSlidingMenu extends RelativeLayout {
 	 */
 	public XSlidingMenu(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		
 		LayoutParams behindParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		mViewBehind = new XSlidingViewBehind(context);
 		addView(mViewBehind, behindParams);
