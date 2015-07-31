@@ -419,6 +419,7 @@ public class XGuestureLock extends ViewGroup {
 			case 0:
 				isallowDrawLine = true;
 				clearMethod();
+				postInvalidate();
 				break;
 
 			default:
