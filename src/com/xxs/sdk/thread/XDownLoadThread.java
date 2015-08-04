@@ -43,6 +43,8 @@ public class XDownLoadThread extends Thread {
 	private long totlelength;
 	/** 当前长度 */
 	private long nowlength;
+	/** 已经下载的长度 */
+	private long hasdownlength;
 
 	/** 构造函数 */
 	public XDownLoadThread() {
@@ -77,24 +79,6 @@ public class XDownLoadThread extends Thread {
 		Message msg = new Message();
 		try {
 			if (ProveUtil.IfHasNet()) {
-				URL url = new URL(path);
-				httpUrlConn = (HttpURLConnection) url.openConnection();
-				httpUrlConn.connect();
-				if (httpUrlConn.getResponseCode() != HttpStatus.SC_OK) {
-					handler.sendEmptyMessage(7);
-					return;
-				}
-				totlelength = httpUrlConn.getContentLength();
-				if (totlelength == -1) {// 如果读取出来为-1重新设置一下对Gzip不支持再获取
-					httpUrlConn.disconnect();
-					httpUrlConn = (HttpURLConnection) url.openConnection();
-					httpUrlConn.setRequestProperty("Accept-Encoding",
-							"identity");
-					httpUrlConn.connect();
-					totlelength = httpUrlConn.getContentLength();
-				}
-				InputStream inputStream = new BufferedInputStream(
-						httpUrlConn.getInputStream());
 				File savefile = new File(FileUtil.creatRootLogFile("Download"),
 						filename);
 				File tempfile = new File(FileUtil.creatRootLogFile("Download"),
@@ -103,7 +87,36 @@ public class XDownLoadThread extends Thread {
 				if (savefile.exists()) {
 					savefile.delete();
 				}
-				FileOutputStream fos = new FileOutputStream(tempfile);
+				FileOutputStream fos;
+				if (tempfile.exists()) {
+					hasdownlength = tempfile.length();
+					nowlength = hasdownlength;
+					fos = new FileOutputStream(tempfile, true);
+				} else {
+					fos = new FileOutputStream(tempfile);
+				}
+				URL url = new URL(path);
+				httpUrlConn = (HttpURLConnection) url.openConnection();
+				httpUrlConn.setRequestProperty("RANGE", "bytes="
+						+ hasdownlength + "-");//特别设置断点续传
+				totlelength = httpUrlConn.getContentLength();
+				if (totlelength < 0) {// 如果读取出来为-1重新设置一下对Gzip不支持再获取
+					httpUrlConn.disconnect();
+					httpUrlConn = (HttpURLConnection) url.openConnection();
+					httpUrlConn.setRequestProperty("Accept-Encoding",
+							"identity");
+					httpUrlConn.setRequestProperty("RANGE", "bytes="
+							+ hasdownlength + "-"); //特别设置断点续传
+					totlelength = httpUrlConn.getContentLength();
+				}
+				totlelength = totlelength + hasdownlength;
+				if (!(httpUrlConn.getResponseCode() == HttpStatus.SC_OK||httpUrlConn.getResponseCode()==HttpStatus.SC_PARTIAL_CONTENT)) {
+					handler.sendEmptyMessage(7);
+					fos.close();
+					return;
+				}
+				InputStream inputStream = new BufferedInputStream(
+						httpUrlConn.getInputStream());
 				// 缓存
 				byte buf[] = new byte[1024 * 1024];
 				int numread = inputStream.read(buf);
@@ -116,7 +129,8 @@ public class XDownLoadThread extends Thread {
 				}
 				fos.close();
 				inputStream.close();
-				tempfile.renameTo(savefile);
+				if (!iscancle)
+					tempfile.renameTo(savefile);
 				handler.sendEmptyMessage(4);
 			} else {
 				msg.what = 0;
@@ -228,7 +242,7 @@ public class XDownLoadThread extends Thread {
 	}
 
 	/** 取消Http连接的方法 */
-	public void cancleDownloadMethod(){
+	public void cancleDownloadMethod() {
 		iscancle = true;
 		httpCallBack.onXDownLoadCancle(threadId);
 	}
