@@ -38,14 +38,18 @@ public class XDownLoadThread extends Thread {
 	private String threadId;
 	private String filename;
 	private boolean iscancle;
+	/** 支持断点 */
 	private HttpURLConnection httpUrlConn;
+	/** 不支持断点 */
+	private HttpURLConnection httpUrlConn2;
 	/** 总长度 */
 	private long totlelength;
 	/** 当前长度 */
 	private long nowlength;
 	/** 已经下载的长度 */
 	private long hasdownlength;
-
+	/**输出流*/
+	private FileOutputStream fos;
 	/** 构造函数 */
 	public XDownLoadThread() {
 
@@ -87,7 +91,6 @@ public class XDownLoadThread extends Thread {
 				if (savefile.exists()) {
 					savefile.delete();
 				}
-				FileOutputStream fos;
 				if (tempfile.exists()) {
 					hasdownlength = tempfile.length();
 					nowlength = hasdownlength;
@@ -98,7 +101,7 @@ public class XDownLoadThread extends Thread {
 				URL url = new URL(path);
 				httpUrlConn = (HttpURLConnection) url.openConnection();
 				httpUrlConn.setRequestProperty("RANGE", "bytes="
-						+ hasdownlength + "-");//特别设置断点续传
+						+ hasdownlength + "-");// 特别设置断点续传
 				totlelength = httpUrlConn.getContentLength();
 				if (totlelength < 0) {// 如果读取出来为-1重新设置一下对Gzip不支持再获取
 					httpUrlConn.disconnect();
@@ -106,17 +109,49 @@ public class XDownLoadThread extends Thread {
 					httpUrlConn.setRequestProperty("Accept-Encoding",
 							"identity");
 					httpUrlConn.setRequestProperty("RANGE", "bytes="
-							+ hasdownlength + "-"); //特别设置断点续传
+							+ hasdownlength + "-"); // 特别设置断点续传
 					totlelength = httpUrlConn.getContentLength();
 				}
-				totlelength = totlelength + hasdownlength;
-				if (!(httpUrlConn.getResponseCode() == HttpStatus.SC_OK||httpUrlConn.getResponseCode()==HttpStatus.SC_PARTIAL_CONTENT)) {
+				if (!(httpUrlConn.getResponseCode() == HttpStatus.SC_OK || httpUrlConn
+						.getResponseCode() == HttpStatus.SC_PARTIAL_CONTENT)) {
 					handler.sendEmptyMessage(7);
 					fos.close();
 					return;
 				}
-				InputStream inputStream = new BufferedInputStream(
-						httpUrlConn.getInputStream());
+				boolean isallowbreeak;// 是否支持断点
+				if (totlelength < 0) {
+					httpUrlConn.disconnect();
+					fos = new FileOutputStream(tempfile);
+					hasdownlength = 0;
+					nowlength = 0;
+					isallowbreeak = false;
+					httpUrlConn2 = (HttpURLConnection) url.openConnection();
+					totlelength = httpUrlConn2.getContentLength();
+					if (totlelength < 0) {// 如果读取出来为-1重新设置一下对Gzip不支持再获取
+						httpUrlConn2.disconnect();
+						httpUrlConn2 = (HttpURLConnection) url.openConnection();
+						httpUrlConn2.setRequestProperty("Accept-Encoding",
+								"identity");
+						totlelength = httpUrlConn2.getContentLength();
+					}
+					if (!(httpUrlConn2.getResponseCode() == HttpStatus.SC_OK || httpUrlConn2
+							.getResponseCode() == HttpStatus.SC_PARTIAL_CONTENT)) {
+						handler.sendEmptyMessage(7);
+						fos.close();
+						return;
+					}
+				} else {
+					isallowbreeak = true;
+				}
+				totlelength = totlelength + hasdownlength;
+				InputStream inputStream;
+				if (isallowbreeak) {
+					inputStream = new BufferedInputStream(
+							httpUrlConn.getInputStream());
+				} else {
+					inputStream = new BufferedInputStream(
+							httpUrlConn2.getInputStream());
+				}
 				// 缓存
 				byte buf[] = new byte[1024 * 1024];
 				int numread = inputStream.read(buf);
@@ -239,6 +274,8 @@ public class XDownLoadThread extends Thread {
 	public void disConnectDownloadMethod() throws Exception {
 		if (httpUrlConn != null)
 			httpUrlConn.disconnect();
+		if (httpUrlConn2 != null)
+			httpUrlConn2.disconnect();
 	}
 
 	/** 取消Http连接的方法 */
